@@ -8,5 +8,6 @@ engines.all().slice(1).forEach(script => {
 });
 
 var ant=require("./Ant_Forest_Launcher.js");
+toastLog("下次执行等待时间："+ant.minNext);
 ant.antForest();
-toast("下次执行等待时间："+ant.minNext);
+toastLog("下次执行等待时间："+ant.minNext);
