@@ -1814,7 +1814,7 @@ function endProcess() {
 
     screenOff();
     current_app.quote_name && messageAction(current_app.quote_name + "任务结束", 1, 0, 0, "both_n");
-    exit();
+    //exit();
 
     // tool function(s) //
 
