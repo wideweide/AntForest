@@ -37,7 +37,7 @@ let config = {
     main_user_switch: false, // if you are multi-account user, you may specify a "main account" to switch
     max_running_time: 5, // 1 <= x <= 30; running timeout each time; unit: minute; leave "false value" if you dislike limitation
 };
-
+let _min_countdown = 0;    // 最小可收取倒计时
 let storage_af, storage_af_cfg, unlock_module;
 let WIDTH, HEIGHT, cX, cY;
 let engines_support_flag = true;
@@ -48,7 +48,7 @@ checkTasksQueue();
 checkVersion();
 checkEngines();
 
-antForest();
+//antForest();
 
 // entrance function //
 
@@ -547,6 +547,24 @@ function checkEnergy() {
         }
     }
 
+      // 确定下一次收取倒计时
+   function  get_min_countdown() {
+    let temp = [];
+    if (_min_countdown && _timestamp instanceof Date) {
+      let countdown_own = _min_countdown - Math.floor((new Date() - _timestamp) / 60000);
+      countdown_own >= 0 ? temp.push(countdown_own) : temp.push(0);
+    }
+    if (textEndsWith("’").exists()) {
+      textEndsWith("’").untilFind().forEach(function(countdown) {
+        let countdown_fri = parseInt(countdown.text().match(/\d+/));
+        temp.push(countdown_fri);
+      });
+    }
+    if (!temp.length) return;
+    _min_countdown = Math.min.apply(null, temp);
+    debugInfo("_min_countdown:"+_min_countdown);
+  }
+
     function checkFriendsEnergy() {
 
         let help_collect_switch = config.help_collect_switch;
@@ -643,6 +661,8 @@ function checkEnergy() {
 
                 forestPageGetReady() && collectBalls();
                 backToHeroList();
+
+		get_min_countdown();
 
                 if (message_switch_on) {
                     !current_app.current_friend.console_logged && messageAction("无能量球可操作", 1, 0, 1);
@@ -1596,6 +1616,7 @@ function showResult() {
     debugInfo("自己能量收取值: " + own);
     let friends = (getCurrentEnergyAmount("buffer") - init - own) || 0;
     debugInfo("好友能量收取值: " + friends);
+    debugInfo("最小可收取倒计时："+_min_countdown);
 
     if (init < 0 || own < 0 || friends < 0) return msgNotice("数据统计失败");
 
@@ -2544,3 +2565,6 @@ function speExecCollectFriendsList() {
         }
     }
 }
+
+exports.antForest = antForest;
+exports.minNext = _min_countdown;
