@@ -10,22 +10,38 @@ var ant = require("./Ant_Forest_Launcher.js");
 
 function exec() {
     let _current_time = 0; // 当前收集次数
+    let amn = 0; //下次收取能量等待时间
     while (true) {
-        _delay(ant.getNextTime());
+        _delay(amn);
         toastLog("第 " + (++_current_time) + " 次运行");
 
         //执行收取能量
         ant.antForest();
+        sleep(1000);
 
 
         //启动下次收取任务
         amn = ant.getNextTime();
         if (amn == null || amn == 0) {
-            toastLog("收完了，没有了……");
-            //break;
-            amn = 60;
-        } else
-            toastLog("下次执行等待时间(分钟)：" + amn);
+            var dtNow = new Date();
+            var hNow = dtNow.getHours();
+
+            var dt = new Date();
+            dt.setMinutes(dt.getMinutes() + 60);
+            var h = dt.getHours();
+
+            if (h >= 7 && h <= 23) {
+                amn = 60;
+            } else if (h == 0) {
+                dtNext = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+                amn = Math.ceil((dtNext - new Date()) / 60000);
+            } else {
+                dtNext = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), 7, 0, 0);
+                amn = Math.round((dtNext - new Date()) / 60000);
+            }
+        }
+
+        toastLog("下次执行等待时间(分钟)：" + amn);
     }
     exit();
 }
@@ -49,12 +65,13 @@ const _delay = function(minutes) {
         i = (now - startTime) / 60000;
         let left = minutes - i;
         log("距离下次运行还有 " + left.toFixed(2) + " 分钟");
-        if (left * 60000 > 30000) {
-            // 剩余时间大于三十秒时 睡眠30秒
-            // 锁屏情况下的30秒可能实际时间有五分钟之久，如果不能忍受这个长度可以再改小一点比如10秒之类的
-            sleep(30000);
+        if (left * 60000 > 60000) {
+            // 剩余时间大于60秒时 睡眠60秒
+            // 锁屏情况下的60秒可能实际时间有十分钟之久
+            // 如果不能忍受这个长度可以再改小一点比如10秒之类的
+            sleep(60000);
         } else {
-            // 剩余时间小于30秒时 直接等待实际时间
+            // 直接等待实际时间
             sleep(left * 60000);
         }
     }

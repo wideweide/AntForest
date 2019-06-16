@@ -57,6 +57,7 @@ function getNextTime(){
 }
 
 function antForest() {
+    minNext=0;
     init();
     launch();
     checkLanguage();
@@ -1793,6 +1794,8 @@ function showResult() {
         let msg = "";
         if (self_num) msg = "Energy from yourself: " + self_num + "g";
         if (friends_num) msg += (self_num ? "\n" : "") + "Energy from friends: " + friends_num + "g";
+        msg += "\n下次可收集间隔(分钟)："+minNext?minNext:"没有了……";
+        log(msg);
         return msg;
     }
 
