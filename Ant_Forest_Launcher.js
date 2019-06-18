@@ -543,6 +543,9 @@ function checkEnergy() {
                 current_app.total_energy_collect_own += getEnergyDiff(); // wait for energy balls being stable
                 return checkOnce(); // recursion has not been tested yet since Mar 26, 2019
             }
+
+	   getMyNext2(); 
+
             return true;
         }
 
@@ -584,6 +587,18 @@ function checkEnergy() {
      
   }
 
+  //检查自己能量
+  function getMyNext2(){
+	    minNext=0;
+	    let temp = [];
+	    let balls=kw_energy_balls_normal().find();
+	    log("check once:" + balls.size());
+	    balls.forEach(function(ball) {
+		ball let countdown = ball.match(/\d+/g);
+		temp.push(countdown[0] * 60 - (-countdown[1]));
+	    });
+	    minNext=Math.min.apply(null, temp);
+  }
       // 获取朋友列表下一次收取倒计时
    function  getMinNext() {
     
