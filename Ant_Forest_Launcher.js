@@ -502,7 +502,7 @@ function checkEnergy() {
         check();
 
 	//此处统计当前能量倒计时
-	getMyNext();
+//	getMyNext();
 	
         current_app.total_energy_collect_own ? debugInfo("共计收取: " + current_app.total_energy_collect_own + "g") : debugInfo("无能量球可收取");
         debugInfo("自己能量检查完毕");
@@ -569,14 +569,14 @@ function checkEnergy() {
 
       let ball = target.untilFind();
       let temp = [];
-      let toasts = _get_toast_async(_package_name, ball.length, function() {
+      //let toasts = _get_toast_async(_package_name, ball.length, function() {
         ball.forEach(function(obj) {
         let countdown = obj.match(/\d+/g);
         temp.push(countdown[0] * 60 - (-countdown[1]));
         });
-      });
+      //});
       minNext = Math.min.apply(null, temp);
-      log("收取自己能量的等待时间(分钟)："+minNext);
+      log("自己能量等待时间(分钟)："+minNext);
      
   }
 
@@ -584,7 +584,7 @@ function checkEnergy() {
    function  getMinNext() {
     
     let temp = [];
-    temp.push(minNext);
+    if(minNext && minNext>0) temp.push(minNext);
     
     if (textEndsWith("’").exists()) {
       textEndsWith("’").untilFind().forEach(function(countdown) {
@@ -1823,7 +1823,7 @@ function showResult() {
         let msg = "";
         if (self_num) msg = "Energy from yourself: " + self_num + "g";
         if (friends_num) msg += (self_num ? "\n" : "") + "Energy from friends: " + friends_num + "g";
-        msg += "\n下次可收集间隔(分钟)：" + (minNext ? minNext : "没有了……");
+        msg += (self_num || friends_num ? "\n" : "") + "下次可收集间隔(分钟)：" + (minNext ? minNext : "没有了……");
         log(msg);
         return msg;
     }

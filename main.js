@@ -41,7 +41,7 @@ function exec() {
             }
         }
 
-        toastLog("下次执行等待时间(分钟)：" + amn);
+        //toastLog("下次执行等待时间(分钟)：" + amn);
     }
     exit();
 }
@@ -53,6 +53,13 @@ const _delay = function(minutes) {
         // delay时间为0时直接跳过
         return;
     }
+    var w = floaty.window(
+        <frame gravity="center">
+                <text id="text" color="white" 
+                textSize="13sp">准备倒计时…</text> 
+        </frame>
+    );
+    w.setPosition(280, -53);
     let startTime = new Date().getTime();
     let timestampGap = minutes * 60000;
     let i = 0;
@@ -64,7 +71,12 @@ const _delay = function(minutes) {
         }
         i = (now - startTime) / 60000;
         let left = minutes - i;
-        log("距离下次运行还有 " + left.toFixed(2) + " 分钟");
+        ui.run(function() {
+            m=(left % 60).toFixed(0);
+            if(m<10)m="0"+m;
+            w.text.setText((left/60).toFixed(0)+":"+m);
+        });
+        //log("距离下次运行还有 " + left.toFixed(2) + " 分钟");
         if (left * 60000 > 60000) {
             // 剩余时间大于60秒时 睡眠60秒
             // 锁屏情况下的60秒可能实际时间有十分钟之久
@@ -75,6 +87,7 @@ const _delay = function(minutes) {
             sleep(left * 60000);
         }
     }
+    w.close();
 }
 
 
