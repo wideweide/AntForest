@@ -594,7 +594,7 @@ function checkEnergy() {
 	    let balls=kw_energy_balls_normal().find();
 	    log("check once:" + balls.size());
 	    balls.forEach(function(ball) {
-		ball let countdown = ball.match(/\d+/g);
+ let countdown = ball.match(/\d+/g);
 		temp.push(countdown[0] * 60 - (-countdown[1]));
 	    });
 	    minNext=Math.min.apply(null, temp);
@@ -1329,6 +1329,7 @@ function checkEnergy() {
                     else messageAction("收取: 统计数据无效", 0, 0, 1);
                     current_app.current_friend.console_logged = 1;
                 }
+                
 
                 return true;
             }

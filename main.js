@@ -74,7 +74,7 @@ const _delay = function(minutes) {
         ui.run(function() {
             m=(left % 60).toFixed(0);
             if(m<10)m="0"+m;
-            w.text.setText((left/60).toFixed(0)+":"+m);
+            w.text.setText(parseInt(left/60)+":"+m);
         });
         //log("距离下次运行还有 " + left.toFixed(2) + " 分钟");
         if (left * 60000 > 60000) {
