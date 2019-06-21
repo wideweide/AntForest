@@ -37,6 +37,8 @@ let config = {
     main_user_switch: false, // if you are multi-account user, you may specify a "main account" to switch
     max_running_time: 5, // 1 <= x <= 30; running timeout each time; unit: minute; leave "false value" if you dislike limitation
 };
+_package_name = "com.eg.android.AlipayGphone";
+
 let minNext = 0;    // 最小可收取倒计时
 let _timestamp = 0;
 let storage_af, storage_af_cfg, unlock_module;
@@ -65,6 +67,66 @@ function antForest() {
     showResult();
     endProcess();
 }
+
+
+ // 获取自己的能量球中可收取倒计时的最小值
+  function getMyNext(exec) {
+    /*
+    let target = className("Button").descMatches(/\s/).filter(function(obj) {
+      return obj.bounds().height() / obj.bounds().width() > 1.05; 
+    });
+    //target=kw_energy_balls_normal().find();
+	    
+    if (!target.exists())  {
+      minNext = 0;
+      log("无可收取能量");
+      return;
+    } 
+    */
+    {
+      //let ball = target.untilFind();
+      let temp = [];
+      let toasts = get_toast_sync(_package_name, exec);
+      toasts.forEach(function(toast) {
+        let countdown = toast.match(/\d+/g);
+        log(countdown);
+        temp.push(countdown[0] * 60 - (-countdown[1]));
+      });
+      minNext = Math.min.apply(null, temp);
+    } 
+    
+    log("my:"+minNext);
+  }
+  
+  function get_toast_sync(filter, exec) {
+      log("toast...");
+    filter = (typeof filter == null) ? "" : filter;
+    let messages = threads.disposable();
+    // 在新线程中开启监听
+    let thread = threads.start(function() {
+      let temp = [];
+      let counter = 0;
+      // 监控 toast
+      events.onToast(function(toast) {
+        if (toast) {
+          if (toast.getPackageName().indexOf(filter) >= 0) {
+            counter++;
+            temp.push(toast.getText())
+            log(toast.getText());
+            //if (counter == limit) messages.setAndNotify(temp);
+          }
+        }
+      });
+      // 触发 toast
+      exec();
+    });
+    // 获取结果
+    let result = messages.blockedGet();
+    thread.interrupt();
+    return result;
+  }
+
+
 
 // main function(s) //
 
@@ -465,8 +527,9 @@ function checkEnergy() {
         let text_sel = className("Button").textMatches(/收集能量\d+克/);
         return desc_sel.exists() && desc_sel || text_sel;
     };
-
+    
     checkOwnEnergy();
+    
     checkFriendsEnergy();
     goBackToAfHome();
 
@@ -503,10 +566,10 @@ function checkEnergy() {
             if (!remain_checked_flag) debugInfo("当前时间不在监测时间范围内");
         }
 
-        check();
+        //check();
+        getMyNext(check);
+    
 
-	//此处统计当前能量倒计时
-//	getMyNext();
 	
         current_app.total_energy_collect_own ? debugInfo("共计收取: " + current_app.total_energy_collect_own + "g") : debugInfo("无能量球可收取");
         debugInfo("自己能量检查完毕");
@@ -543,9 +606,6 @@ function checkEnergy() {
                 current_app.total_energy_collect_own += getEnergyDiff(); // wait for energy balls being stable
                 return checkOnce(); // recursion has not been tested yet since Mar 26, 2019
             }
-
-	   getMyNext2(); 
-
             return true;
         }
 
@@ -563,42 +623,39 @@ function checkEnergy() {
         }
     }
 
- // 获取自己的能量球中可收取倒计时的最小值
-  function getMyNext() {
-    minNext = 0;
-    let target = className("Button").textMatches(/\s/).filter(function(obj) {
-      return obj.bounds().height() / obj.bounds().width() > 1.05; 
-    });
-    if (!target.exists()) {
-      log("自己无可收取能量");
-      return;
-    }
-
-      let ball = target.untilFind();
-      let temp = [];
-      //let toasts = _get_toast_async(_package_name, ball.length, function() {
-        ball.forEach(function(obj) {
-        let countdown = obj.match(/\d+/g);
-        temp.push(countdown[0] * 60 - (-countdown[1]));
-        });
-      //});
-      minNext = Math.min.apply(null, temp);
-      log("自己能量等待时间(分钟)："+minNext);
-     
-  }
-
   //检查自己能量
-  function getMyNext2(){
+  function getMyNext3(){
 	    minNext=0;
 	    let temp = [];
 	    let balls=kw_energy_balls_normal().find();
 	    log("check once:" + balls.size());
 	    balls.forEach(function(ball) {
- let countdown = ball.match(/\d+/g);
-		temp.push(countdown[0] * 60 - (-countdown[1]));
+    log("ball");
+    log(ball.text());
+    log(ball.desc());
+ //let countdown = ball.match(/\d+/g);
+	//	temp.push(countdown[0] * 60 - (-countdown[1]));
 	    });
 	    minNext=Math.min.apply(null, temp);
   }
+  
+      // 获取朋友列表下一次收取倒计时
+   function  getMyNext2() {
+    
+    let temp = [];
+    if(minNext && minNext>0) temp.push(minNext);
+    
+    if (textMatches(":").exists()) {
+      textMatches(":").untilFind().forEach(function(countdown) {
+        log(countdown);
+        let countdown_fri = parseInt(countdown.text().match(/\d+/));
+        temp.push(countdown_fri);
+      });
+    }
+    if (!temp.length) return;
+    minNext = Math.min.apply(null, temp);
+  }
+
       // 获取朋友列表下一次收取倒计时
    function  getMinNext() {
     
