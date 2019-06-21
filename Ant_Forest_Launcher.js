@@ -69,63 +69,6 @@ function antForest() {
 }
 
 
- // 获取自己的能量球中可收取倒计时的最小值
-  function getMyNext(exec) {
-    /*
-    let target = className("Button").descMatches(/\s/).filter(function(obj) {
-      return obj.bounds().height() / obj.bounds().width() > 1.05; 
-    });
-    //target=kw_energy_balls_normal().find();
-	    
-    if (!target.exists())  {
-      minNext = 0;
-      log("无可收取能量");
-      return;
-    } 
-    */
-    {
-      //let ball = target.untilFind();
-      let temp = [];
-      let toasts = get_toast_sync(_package_name, exec);
-      toasts.forEach(function(toast) {
-        let countdown = toast.match(/\d+/g);
-        log(countdown);
-        temp.push(countdown[0] * 60 - (-countdown[1]));
-      });
-      minNext = Math.min.apply(null, temp);
-    } 
-    
-    log("my:"+minNext);
-  }
-  
-  function get_toast_sync(filter, exec) {
-      log("toast...");
-    filter = (typeof filter == null) ? "" : filter;
-    let messages = threads.disposable();
-    // 在新线程中开启监听
-    let thread = threads.start(function() {
-      let temp = [];
-      let counter = 0;
-      // 监控 toast
-      events.onToast(function(toast) {
-        if (toast) {
-          if (toast.getPackageName().indexOf(filter) >= 0) {
-            counter++;
-            temp.push(toast.getText())
-            log(toast.getText());
-            //if (counter == limit) messages.setAndNotify(temp);
-          }
-        }
-      });
-      // 触发 toast
-      exec();
-    });
-    // 获取结果
-    let result = messages.blockedGet();
-    thread.interrupt();
-    return result;
-  }
-
 
 
 // main function(s) //
@@ -566,8 +509,8 @@ function checkEnergy() {
             if (!remain_checked_flag) debugInfo("当前时间不在监测时间范围内");
         }
 
-        //check();
-        getMyNext(check);
+        check();
+        //getMyNext(check);
     
 
 	
