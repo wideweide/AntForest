@@ -68,8 +68,38 @@ function antForest() {
     endProcess();
 }
 
+// 获取下次可收取的能量
+function checkNext(){
+	let raw_balls descMatches(/\xa0/).find();
+	threads. start(function({
+		raw_balls. forEach( node=>{
+			let bounds = node.bounds();
+			press(bounds.centerX(), bounds.centerY(), 1);
+		});
+	});
+	console.log(observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 10000, raw_balls. length)); 
+}
 
-
+//监听toast事件信息
+let observeToastMessage function (observed_app_pkg_name, observed_msg, timeout, aim_amount){
+	timeout= timeout || 20000;
+	observed_msg= observed_msg || "";
+	observed_app_pkg_name = observed_app_ pkg_name || currentPackage();
+	let got_msg=[];
+	let thread =threads. start(function({
+		events.observeToast();
+		events.onToast(msg =>
+			if(msg.getPackageName()=== observed_app_pkgname && msg.getText().match(observed_msg))
+				got_msg.push(msg.getText());
+		});
+	});
+	while(timeout >0 && got_msg.length< aim_amount){
+		sleep(300);
+		timeout-= 300;
+	}
+	if (thread && thread.isAlive()) thread. interrupt();
+	return got_msg;
+}
 
 // main function(s) //
 
@@ -510,7 +540,8 @@ function checkEnergy() {
         }
 
         check();
-        //getMyNext(check);
+
+	checkNext();
     
 
 	
@@ -565,39 +596,6 @@ function checkEnergy() {
             return (energy_rec - current_app.total_energy_init) || 0;
         }
     }
-
-  //检查自己能量
-  function getMyNext3(){
-	    minNext=0;
-	    let temp = [];
-	    let balls=kw_energy_balls_normal().find();
-	    log("check once:" + balls.size());
-	    balls.forEach(function(ball) {
-    log("ball");
-    log(ball.text());
-    log(ball.desc());
- //let countdown = ball.match(/\d+/g);
-	//	temp.push(countdown[0] * 60 - (-countdown[1]));
-	    });
-	    minNext=Math.min.apply(null, temp);
-  }
-  
-      // 获取朋友列表下一次收取倒计时
-   function  getMyNext2() {
-    
-    let temp = [];
-    if(minNext && minNext>0) temp.push(minNext);
-    
-    if (textMatches(":").exists()) {
-      textMatches(":").untilFind().forEach(function(countdown) {
-        log(countdown);
-        let countdown_fri = parseInt(countdown.text().match(/\d+/));
-        temp.push(countdown_fri);
-      });
-    }
-    if (!temp.length) return;
-    minNext = Math.min.apply(null, temp);
-  }
 
       // 获取朋友列表下一次收取倒计时
    function  getMinNext() {
@@ -710,6 +708,9 @@ function checkEnergy() {
                 if (inBlackList(clickRankListItemFunc)) continue;
 
                 forestPageGetReady() && collectBalls();                
+
+		checkNext();
+
                 backToHeroList();
 
                 if (message_switch_on) {
