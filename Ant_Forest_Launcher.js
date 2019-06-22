@@ -82,7 +82,7 @@ function checkNext(raw_balls){
 	});
 	});
 
-	let toasts = observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 5000, raw_balls.length);
+	let toasts = observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 10000, raw_balls.length);
 	console.log("toasts:"+toasts); 
 	let temp = [];
 	toasts.forEach(function(toast) {
