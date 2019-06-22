@@ -77,7 +77,6 @@ function checkNext(raw_balls){
 	if(raw_balls.length==0) return;
 
 	threads.start(function(){
-		sleep(2000);
 		log("start to press...");
 		raw_balls.forEach( node=>{
 			let bounds = node.bounds();
@@ -107,8 +106,6 @@ let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout
     let thread = threads.start(function () {
         events.observeToast();
         events.onToast(msg => {
-		log("onToast:"+msg);
-		log("onToast:"+msg.getText());
 		if (msg.getPackageName() == observed_app_pkg_name && msg.getText().match(observed_msg))
 			got_msg.push(msg.getText());
         });
