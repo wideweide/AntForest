@@ -70,6 +70,8 @@ function antForest() {
 
 // 获取下次可收取的能量
 function checkNext(raw_balls){
+	//首先设置为0，未检测到有效时间间隔
+	minNext=0;
 	log("能量球数量："+raw_balls.length);
 
 	if(raw_balls.length==0) return;
@@ -78,23 +80,20 @@ function checkNext(raw_balls){
 		raw_balls.forEach( node=>{
 			let bounds = node.bounds();
 			press(bounds.centerX(), bounds.centerY(), 1);
-	log("pressed");
-	});
+			log("pressed");
+		});
 	});
 
 	let toasts = observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 10000, raw_balls.length);
 	console.log("toasts:"+toasts); 
-	let temp = [];
+	var temp = [];
 	toasts.forEach(function(toast) {
-    log(toast);
 		let countdown = toast.match(/\d+/g);
 		temp.push(countdown[0] * 60 - (-countdown[1]));
 	});
-	minNext = Math.min.apply(null, temp);
-log("minNext:"+minNext);
-if(minNext==Infinity ||minNext==null) minNext=0;
-log("minNext:"+minNext);
-
+	log("temp:"+temp);
+	if(temp.length>0) minNext = Math.min.apply(null, temp);
+	log("minNext:"+minNext);
 }
 
 //监听toast事件信息
@@ -106,7 +105,10 @@ let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout
     let thread = threads.start(function () {
         events.observeToast();
         events.onToast(msg => {
-            if (msg.getPackageName() === observed_app_pkg_name && msg.getText().match(observed_msg)) got_msg.push(msg.getText());
+		log("onToast:"+msg);
+		log("onToast:"+msg.getText());
+		if (msg.getPackageName() == observed_app_pkg_name && msg.getText().match(observed_msg))
+			got_msg.push(msg.getText());
         });
     });
     log("observe started...");
@@ -116,7 +118,7 @@ let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout
     }
     if (thread && thread.isAlive()) thread.interrupt();
     return got_msg;
-};
+}
 
 // main function(s) //
 
@@ -735,7 +737,6 @@ function checkEnergy() {
                 }
             }
             
-            //getMinNext();
             
             if (!list_end_signal) {
                 swipeUp();
