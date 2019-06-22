@@ -95,9 +95,4 @@ const _delay = function(minutes) {
     w.close();
 }
 
-events.observeToast();
-events.onToast(function(toast){
-    log("Toast内容: " + toast.getText() + " 包名: " + toast.getPackageName());
-});
-
 exec();
