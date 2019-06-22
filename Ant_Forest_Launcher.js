@@ -77,6 +77,8 @@ function checkNext(raw_balls){
 	if(raw_balls.length==0) return;
 
 	threads.start(function(){
+		sleep(2000);
+		log("start to press...");
 		raw_balls.forEach( node=>{
 			let bounds = node.bounds();
 			press(bounds.centerX(), bounds.centerY(), 1);
@@ -618,12 +620,12 @@ function checkEnergy() {
 
       // 获取朋友列表下一次收取倒计时
    function  getMinNext() {
-    
     let temp = [];
     if(minNext && minNext>0) temp.push(minNext);
     
     if (textEndsWith("’").exists()) {
       textEndsWith("’").untilFind().forEach(function(countdown) {
+	log("Next:"+countdown.text());
         let countdown_fri = parseInt(countdown.text().match(/\d+/));
         temp.push(countdown_fri);
       });
