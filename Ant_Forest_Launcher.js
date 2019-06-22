@@ -83,13 +83,18 @@ function checkNext(raw_balls){
 	});
 
 	let toasts = observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 5000, raw_balls.length);
-	console.log("next:"+toasts); 
+	console.log("toasts:"+toasts); 
 	let temp = [];
 	toasts.forEach(function(toast) {
+    log(toast);
 		let countdown = toast.match(/\d+/g);
 		temp.push(countdown[0] * 60 - (-countdown[1]));
 	});
 	minNext = Math.min.apply(null, temp);
+log("minNext:"+minNext);
+if(minNext==Infinity ||minNext==null) minNext=0;
+log("minNext:"+minNext);
+
 }
 
 //监听toast事件信息
@@ -104,6 +109,7 @@ let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout
             if (msg.getPackageName() === observed_app_pkg_name && msg.getText().match(observed_msg)) got_msg.push(msg.getText());
         });
     });
+    log("observe started...");
     while (timeout > 0 && got_msg.length < aim_amount) {
         sleep(300);
         timeout -= 300;
