@@ -70,43 +70,47 @@ function antForest() {
 
 // 获取下次可收取的能量
 function checkNext(raw_balls){
-	//let raw_balls= descMatches(/\xa0/).find();
-//let raw_balls = kw_energy_balls_normal().find(),
-                    	
-log(raw_balls.length);
-threads.start(function(){
+	log("能量球数量："+raw_balls.length);
+
+	if(raw_balls.length==0) return;
+
+	threads.start(function(){
 		raw_balls.forEach( node=>{
 			let bounds = node.bounds();
 			press(bounds.centerX(), bounds.centerY(), 1);
 	log("pressed");
 	});
 	});
-	console.log("next:"+observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 5000, raw_balls.length)); 
+
+	let toasts = observeToastMessage("com.eg.android.AlipayGphone",/才能收取/, 5000, raw_balls.length);
+	console.log("next:"+toasts); 
+	let temp = [];
+	toasts.forEach(function(toast) {
+		let countdown = toast.match(/\d+/g);
+		temp.push(countdown[0] * 60 - (-countdown[1]));
+	});
+	minNext = Math.min.apply(null, temp);
 }
 
 //监听toast事件信息
-function observeToastMessage(observed_app_pkg_name, observed_msg, timeout, aim_amount){
-timeout= timeout || 20000;
-observed_msg= observed_msg || "";
-observed_app_pkg_name = observed_app_pkg_name || currentPackage();
-	let got_msg=[];
-	let thread =threads.start(function(){
-		events.observeToast();
-		events.onToast(msg => {
-    log("msg:"+msg);
-			if(msg.getPackageName()=== observed_app_pkg_name && msg.getText().match(observed_msg))
-				got_msg.push(msg.getText());
-		});
-	});
-log("started observeToast");	
-
-	while(timeout >0 && got_msg.length< aim_amount){
-		sleep(300);
-		timeout-= 300;
-	}
-	if (thread && thread.isAlive()) thread. interrupt();
-	return got_msg;
-}
+let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout, aim_amount) {
+    timeout = timeout || 20000;
+    observed_msg = observed_msg || "";
+    observed_app_pkg_name = observed_app_pkg_name || currentPackage();
+    let got_msg = [];
+    let thread = threads.start(function () {
+        events.observeToast();
+        events.onToast(msg => {
+            if (msg.getPackageName() === observed_app_pkg_name && msg.getText().match(observed_msg)) got_msg.push(msg.getText());
+        });
+    });
+    while (timeout > 0 && got_msg.length < aim_amount) {
+        sleep(300);
+        timeout -= 300;
+    }
+    if (thread && thread.isAlive()) thread.interrupt();
+    return got_msg;
+};
 
 // main function(s) //
 
