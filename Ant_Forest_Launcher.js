@@ -630,6 +630,15 @@ function checkEnergy() {
         temp.push(countdown_fri);
       });
     }
+
+    if (descEndsWith("’").exists()) {
+      descEndsWith("’").untilFind().forEach(function(countdown) {
+	log("Next:"+countdown.desc());
+        let countdown_fri = parseInt(countdown.desc().match(/\d+/));
+        temp.push(countdown_fri);
+      });
+    }
+
     if (!temp.length) return;
     minNext = Math.min.apply(null, temp);
   }
