@@ -59,18 +59,22 @@ function getNextTime(){
 }
 
 function antForest() {
-    
-    minNext=0;
-    init();
-    launch();
-    checkLanguage();
-    checkEnergy();
-    showResult();
-    endProcess();
-    
-    log("removeAllListeners……");
-    events.removeAllListeners()
-            
+    let thread = threads.start(function() {
+        events.setMaxListeners(0);
+        events.observeToast();
+     });
+    try{
+	    minNext=0;
+	    init();
+	    launch();
+	    checkLanguage();
+	    checkEnergy();
+	    showResult();
+	    endProcess();
+    }catch(e){
+	    minNext=2;
+    }finally{
+    }
 }
 
 // 获取下次可收取的能量
@@ -109,7 +113,7 @@ let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout
     observed_app_pkg_name = observed_app_pkg_name || currentPackage();
     let got_msg = [];
     let thread = threads.start(function () {
-        events.observeToast();
+        //events.observeToast();
         events.onToast(msg => {
 		if (msg.getPackageName() == observed_app_pkg_name && msg.getText().match(observed_msg))
 			got_msg.push(msg.getText());
