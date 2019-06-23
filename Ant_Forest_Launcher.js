@@ -59,6 +59,7 @@ function getNextTime(){
 }
 
 function antForest() {
+    
     minNext=0;
     init();
     launch();
@@ -66,13 +67,17 @@ function antForest() {
     checkEnergy();
     showResult();
     endProcess();
+    
+    log("removeAllListeners……");
+    events.removeAllListeners()
+            
 }
 
 // 获取下次可收取的能量
 function checkNext(raw_balls){
 	//首先设置为0，未检测到有效时间间隔
 	minNext=0;
-	log("能量球数量："+raw_balls.length);
+	log("我的能量球数："+raw_balls.length);
 
 	if(raw_balls.length==0) return;
 
@@ -116,6 +121,7 @@ let observeToastMessage = function (observed_app_pkg_name, observed_msg, timeout
         timeout -= 300;
     }
     if (thread && thread.isAlive()) thread.interrupt();
+    events.stop
     return got_msg;
 }
 

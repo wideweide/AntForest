@@ -301,7 +301,7 @@ function launchThisApp(intent_or_name, params) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 
@@ -475,7 +475,7 @@ function killThisApp(name, params) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 
@@ -659,7 +659,7 @@ function restartThisEngine(params) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 
@@ -816,7 +816,7 @@ function messageAction(msg, msg_level, if_toast, if_arrow, if_split_line, params
             _exit_flag = true;
     }
     if (_if_split_line) _showSplitLine(typeof _if_split_line === "string" ? (_if_split_line.match(/dash/) ? (_if_split_line.match(/_n|n_/) ? "\n" : "") : _if_split_line) : "", _split_line_style);
-    _exit_flag && exit();
+    //_exit_flag && exit();
     return !(_msg_level in {3: 1, 4: 1});
 
     // raw function(s) //
@@ -929,7 +929,7 @@ function waitForAction(f, timeout_or_times, interval) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 }
@@ -1142,7 +1142,7 @@ function clickAction(f, strategy, params) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 
@@ -1221,7 +1221,7 @@ function waitForAndClickAction(f, timeout_or_times, interval, click_params) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 
@@ -1436,7 +1436,7 @@ function tryRequestScreenCapture(params) {
         toast_flag && toast(_msg);
         _msg_level === 1 && log(_msg) || _msg_level === 2 && console.info(_msg) ||
         _msg_level === 3 && console.warn(_msg) || _msg_level >= 4 && console.error(_msg);
-        _msg_level >= 8 && exit();
+        //_msg_level >= 8 && exit();
         return !(_msg_level in {3: 1, 4: 1});
     }
 

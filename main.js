@@ -16,12 +16,19 @@ function exec() {
         toastLog("第 " + (++_current_time) + " 次运行");
 
         //执行收取能量
-        ant.antForest();
+        try{
+            ant.antForest();
+            amn = ant.getNextTime();
+        }catch(e){
+            toastLog(e);
+            amn = 2;
+        }finally{
+            
+        }
         sleep(1000);
 
 
         //启动下次收取任务
-        amn = ant.getNextTime();
         if (amn == null || amn == 0) {
             var dtNow = new Date();
             var hNow = dtNow.getHours();
