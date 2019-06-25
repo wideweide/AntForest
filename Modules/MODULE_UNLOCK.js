@@ -614,7 +614,7 @@ module.exports = function () {
             msg.forEach(msg => msg && messageAction(msg, 4, 0, 1));
             messageAction(device_intro, 4, 0, 2, 1);
             is_screen_on && messageAction("自动关闭屏幕" + (keycode(26) ? "" : "失败"), 1, 0, 0, 1);
-            exit();
+            //exit();
         }
 
         function wakeupScreenIfNeeded() {

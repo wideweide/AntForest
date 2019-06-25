@@ -59,10 +59,6 @@ function getNextTime(){
 }
 
 function antForest() {
-    let thread = threads.start(function() {
-        events.setMaxListeners(0);
-        events.observeToast();
-     });
     try{
 	    minNext=0;
 	    init();

@@ -11,19 +11,27 @@ var ant = require("./Ant_Forest_Launcher.js");
 function exec() {
     let _current_time = 0; // 当前收集次数
     let amn = 0; //下次收取能量等待时间
+    let thread = threads.start(function() {
+                events.setMaxListeners(0);
+                events.observeToast();
+            });
+
     while (true) {
         _delay(amn);
         toastLog("第 " + (++_current_time) + " 次运行");
 
         //执行收取能量
-        try{
+        try {
+            
             ant.antForest();
             amn = ant.getNextTime();
-        }catch(e){
+        } catch (e) {
             toastLog(e);
             amn = 2;
-        }finally{
-            
+        } finally {
+            log("stop……");
+            //thread.interrupt();
+            events.removeAllListeners();
         }
         sleep(1000);
 
@@ -47,6 +55,7 @@ function exec() {
                 amn = Math.round((dtNext - new Date()) / 60000);
             }
         }
+        //amn = 1;
 
         //toastLog("下次执行等待时间(分钟)：" + amn);
     }
@@ -62,16 +71,16 @@ const _delay = function(minutes) {
     }
     var w = floaty.window(
         <frame gravity="center">
-                <text id="text" color="white" 
-                textSize="13sp">准备倒计时…</text> 
-        </frame>
+                <text id="text" color="white"
+                textSize="13sp">准备倒计时…</text>
+            </frame>
     );
     w.setPosition(280, -53);
     let endTime = new Date();
-    endTime.setMinutes(endTime.getMinutes()+minutes);
+    endTime.setMinutes(endTime.getMinutes() + minutes);
     m = endTime.getMinutes();
-    if(m<10) m="0"+m;
-    endTime = endTime.getHours()+":"+m;
+    if (m < 10) m = "0" + m;
+    endTime = endTime.getHours() + ":" + m;
     let startTime = new Date().getTime();
     let timestampGap = minutes * 60000;
     let i = 0;
@@ -84,9 +93,9 @@ const _delay = function(minutes) {
         i = (now - startTime) / 60000;
         let left = minutes - i;
         ui.run(function() {
-            m=(left % 60).toFixed(0);
-            if(m<10)m="0"+m;
-            w.text.setText(parseInt(left/60)+":"+m+"->"+endTime);
+            m = (left % 60).toFixed(0);
+            if (m < 10) m = "0" + m;
+            w.text.setText(parseInt(left / 60) + ":" + m + "->" + endTime);
         });
         //log("距离下次运行还有 " + left.toFixed(2) + " 分钟");
         if (left * 60000 > 60000) {
